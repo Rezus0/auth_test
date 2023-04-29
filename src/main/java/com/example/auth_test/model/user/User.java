@@ -1,4 +1,4 @@
-package com.example.auth_test.user;
+package com.example.auth_test.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -15,10 +15,9 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-@Inheritance(strategy = InheritanceType.JOINED)
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "_user")
 public class User implements UserDetails {
@@ -30,10 +29,11 @@ public class User implements UserDetails {
     private String name;
     private String surname;
     private String email;
+    private boolean activated = false;
     @JsonIgnore
     private String password;
 
-    @ElementCollection
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
@@ -67,6 +67,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return activated;
     }
 }

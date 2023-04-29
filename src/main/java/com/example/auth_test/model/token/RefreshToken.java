@@ -1,13 +1,13 @@
-package com.example.auth_test.token;
+package com.example.auth_test.model.token;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Data
 @Builder
@@ -20,7 +20,8 @@ public class RefreshToken {
     @GeneratedValue
     private Long id;
     private String body;
-    @Transient
-    @Value("${token.refresh.expiryMs}")
-    private Long expiryTimeMillis;
+    private final Long expiryTimeMillis = LocalDateTime.now()
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli() + 2678400000L;
 }
