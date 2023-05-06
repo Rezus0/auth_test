@@ -2,9 +2,11 @@ package com.example.auth_test.services;
 
 import com.example.auth_test.requests.AuthenticationResponse;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -19,6 +21,14 @@ public class CookieService {
         refreshTokenCookie.setPath("/");
         refreshTokenCookie.setHttpOnly(true);
         return List.of(acessTokenCookie, refreshTokenCookie);
+    }
+
+    public String extractToken(HttpServletRequest request) {
+        return Arrays.stream(request.getCookies())
+                .filter(cookie -> cookie.getName().equals("ACCESS-TOKEN"))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElseThrow();
     }
 
     public Cookie configureAccessCookie(String accessToken) {

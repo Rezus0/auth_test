@@ -10,14 +10,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 @Table(name = "_user")
 public class User implements UserDetails {
@@ -28,15 +29,34 @@ public class User implements UserDetails {
     private Long id;
     private String name;
     private String surname;
+    private String patronymic;
+    private LocalDate birthday;
     private String email;
-    private boolean activated = false;
     @JsonIgnore
     private String password;
+    private boolean activated = false;
+
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
+
+    @Builder
+    public User(String name, String surname, String patronymic, LocalDate birthday,
+                String email, String password, List<Role> roles) {
+        this.name = name;
+        this.surname = surname;
+        this.patronymic = patronymic;
+        this.birthday = birthday;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    protected User(Long id) {
+        this.id = id;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

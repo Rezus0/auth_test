@@ -13,7 +13,8 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler
     public ResponseEntity<String> handleException(RuntimeException e) {
         log.warn(e.getMessage());
-        log.warn(Arrays.toString(e.getStackTrace()));
+        Arrays.stream(e.getStackTrace())
+                .forEach(er -> log.warn(er.toString()));
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

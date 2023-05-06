@@ -2,7 +2,7 @@ server:
   port: 5555
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/auth_db
+    url: jdbc:postgresql://localhost:5432/dormitory_app
     username: postgres
     password: skibidi
     driver-class-name: org.postgresql.Driver

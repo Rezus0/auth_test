@@ -44,13 +44,14 @@ public class AuthService {
         User user = User.builder()
                 .name(request.getName())
                 .surname(request.getSurname())
+                .patronymic(request.getPatronymic())
+                .birthday(request.getBirthday())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .roles(List.of(Role.WORKER, Role.STUDENT))
+                .roles(request.getEmail().startsWith("rere") ?
+                        List.of(Role.EMPLOYEE, Role.WORKER, Role.ADMIN) : List.of(Role.STUDENT))
                 .build();
-        log.info("{}", System.currentTimeMillis());
         userService.save(user);
-        log.info("{}", System.currentTimeMillis());
         return "User has been successfully registered."
                 + "\n" +
                 sendCode(user);
